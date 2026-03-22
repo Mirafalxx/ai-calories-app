@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import { useSignUp } from '@clerk/clerk-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import logo from '../assets/images/logo.png'
+import { useState } from "react";
+import { useSignUp } from "@clerk/clerk-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../lib/firebase";
+import logo from "../assets/images/logo.png";
 
 export default function SignUpPage() {
   const { isLoaded, signUp, setActive } = useSignUp();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  // Pending verification state is omitted here since we want a direct flow, 
+  const [error, setError] = useState("");
+  // Pending verification state is omitted here since we want a direct flow,
   // but if required by Clerk UI, you'll need the pending state to input OTP.
   const navigate = useNavigate();
 
@@ -23,11 +23,11 @@ export default function SignUpPage() {
 
     try {
       setIsLoading(true);
-      setError('');
-      
-      const parts = name.trim().split(' ');
+      setError("");
+
+      const parts = name.trim().split(" ");
       const firstName = parts[0];
-      const lastName = parts.slice(1).join(' ');
+      const lastName = parts.slice(1).join(" ");
 
       const result = await signUp.create({
         emailAddress: email,
@@ -38,43 +38,50 @@ export default function SignUpPage() {
 
       // NOTE: If your Clerk app requires email verification, status will be 'missing_requirements'
       // You may need to handle the verification flow separately.
-      if (result.status === 'complete') {
+      if (result.status === "complete") {
         // Create user doc in Firestore right away to ensure sync. Auth wrapper will cover oauth cases.
         try {
-          await setDoc(doc(db, 'users', result.createdUserId!), {
+          await setDoc(doc(db, "users", result.createdUserId!), {
             uid: result.createdUserId,
             email,
             name,
             createdAt: serverTimestamp(),
             dailyGoal: 2000,
           });
-        } catch(dbErr) {
+        } catch (dbErr) {
           console.error("Could not write to firestore immediately:", dbErr);
         }
 
         await setActive({ session: result.createdSessionId });
-        navigate('/');
+        navigate("/");
       } else {
         // Wait for unhandled flows like email_code
-        setError('Sign up pending verification. Please check settings.');
+        setError("Sign up pending verification. Please check settings.");
       }
     } catch (err: any) {
-      setError(err.errors?.[0]?.message || 'An error occurred during sign up.');
+      setError(err.errors?.[0]?.message || "An error occurred during sign up.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGoogleAuth = () => {
+  const handleGoogleAuth = async () => {
     if (!isLoaded) return;
-    signUp.authenticateWithRedirect({
-      strategy: 'oauth_google',
-      redirectUrl: '/sso-callback',
-      redirectUrlComplete: '/',
-    });
+    try {
+      setIsLoading(true);
+      setError("");
+      await signUp.authenticateWithRedirect({
+        strategy: "oauth_google",
+        redirectUrl: "/sso-callback",
+        redirectUrlComplete: "/",
+      });
+    } catch (err: any) {
+      console.error(err);
+      setError(err.errors?.[0]?.longMessage || err.message || "Google Auth failed. Check console.");
+      setIsLoading(false);
+    }
   };
 
-  
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="glass-panel w-full max-w-md rounded-2xl p-8 relative overflow-hidden transition-all duration-300">
@@ -86,11 +93,7 @@ export default function SignUpPage() {
           <p className="text-slate-500 text-sm mt-1">Start tracking your nutrition with AI</p>
         </div>
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100">
-            {error}
-          </div>
-        )}
+        {error && <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100">{error}</div>}
 
         <form onSubmit={handleSignUp} className="space-y-4">
           <div>
@@ -146,7 +149,7 @@ export default function SignUpPage() {
             disabled={isLoading || !isLoaded}
             className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 rounded-lg transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed border border-transparent"
           >
-            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Create Account'}
+            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Create Account"}
           </button>
         </form>
 
@@ -158,8 +161,9 @@ export default function SignUpPage() {
 
         <button
           onClick={handleGoogleAuth}
-          disabled={!isLoaded}
-          className="mt-6 w-full flex items-center justify-center gap-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium py-2.5 rounded-lg transition-colors"
+          type="button"
+          disabled={!isLoaded || isLoading}
+          className="mt-6 w-full flex items-center justify-center gap-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium py-2.5 rounded-lg transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path
@@ -183,7 +187,7 @@ export default function SignUpPage() {
         </button>
 
         <p className="mt-8 text-center text-sm text-slate-500">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link to="/sign-in" className="text-emerald-600 hover:text-emerald-700 font-medium transition-colors">
             Sign in
           </Link>

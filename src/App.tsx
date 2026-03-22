@@ -1,10 +1,12 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { SignedIn, SignedOut, useUser } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, useUser, AuthenticateWithRedirectCallback } from '@clerk/clerk-react';
 import { Loader2 } from 'lucide-react';
+import { useEffect } from 'react';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import { useSyncUser } from './hooks/useSyncUser';
 import logo from './assets/images/logo.png'
+
 function Dashboard() {
   const { user } = useUser();
   const { synced } = useSyncUser();
@@ -44,6 +46,30 @@ function Dashboard() {
 }
 
 function App() {
+  const { isLoaded, isSignedIn, user } = useUser();
+
+  // Save the user's email in local storage when signed in
+  useEffect(() => {
+    if (isLoaded) {
+      if (isSignedIn && user?.primaryEmailAddress?.emailAddress) {
+        localStorage.setItem('userEmail', user.primaryEmailAddress.emailAddress);
+      } else if (!isSignedIn) {
+        localStorage.removeItem('userEmail');
+      }
+    }
+  }, [isLoaded, isSignedIn, user]);
+
+  // Prevent flash of login screen using localStorage
+  const cachedEmail = localStorage.getItem('userEmail');
+  if (!isLoaded && cachedEmail) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+        <p className="text-slate-500 font-medium">Welcome back, {cachedEmail}...</p>
+      </div>
+    );
+  }
+
   return (
     <Routes>
       <Route
@@ -60,19 +86,33 @@ function App() {
         }
       />
       <Route
+        path="/sso-callback"
+        element={<AuthenticateWithRedirectCallback />}
+      />
+      <Route
         path="/sign-in/*"
         element={
-          <SignedOut>
-            <SignInPage />
-          </SignedOut>
+          <>
+            <SignedIn>
+              <Navigate to="/" replace />
+            </SignedIn>
+            <SignedOut>
+              <SignInPage />
+            </SignedOut>
+          </>
         }
       />
       <Route
         path="/sign-up/*"
         element={
-          <SignedOut>
-            <SignUpPage />
-          </SignedOut>
+          <>
+            <SignedIn>
+              <Navigate to="/" replace />
+            </SignedIn>
+            <SignedOut>
+              <SignUpPage />
+            </SignedOut>
+          </>
         }
       />
       {/* Fallback route */}

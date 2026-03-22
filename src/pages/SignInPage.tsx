@@ -37,13 +37,21 @@ export default function SignInPage() {
     }
   };
 
-  const handleGoogleAuth = () => {
+  const handleGoogleAuth = async () => {
     if (!isLoaded) return;
-    signIn.authenticateWithRedirect({
-      strategy: 'oauth_google',
-      redirectUrl: '/sso-callback',
-      redirectUrlComplete: '/',
-    });
+    try {
+      setIsLoading(true);
+      setError('');
+      await signIn.authenticateWithRedirect({
+        strategy: 'oauth_google',
+        redirectUrl: '/sso-callback',
+        redirectUrlComplete: '/',
+      });
+    } catch (err: any) {
+      console.error(err);
+      setError(err.errors?.[0]?.longMessage || err.message || 'Google Auth failed. Check console.');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -113,8 +121,9 @@ export default function SignInPage() {
 
         <button
           onClick={handleGoogleAuth}
-          disabled={!isLoaded}
-          className="mt-6 w-full flex items-center justify-center gap-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium py-2.5 rounded-lg transition-colors"
+          type="button"
+          disabled={!isLoaded || isLoading}
+          className="mt-6 w-full flex items-center justify-center gap-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium py-2.5 rounded-lg transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path
