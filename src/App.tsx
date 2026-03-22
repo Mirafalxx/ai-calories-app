@@ -4,7 +4,7 @@ import { Loader2 } from 'lucide-react';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import { useSyncUser } from './hooks/useSyncUser';
-
+import logo from './assets/images/logo.png'
 function Dashboard() {
   const { user } = useUser();
   const { synced } = useSyncUser();
@@ -22,7 +22,7 @@ function Dashboard() {
     <div className="min-h-screen p-8 max-w-4xl mx-auto">
       <header className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200">
         <div className="flex items-center gap-3">
-          <img src="/images/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
+          <img src={logo} alt="Logo" className="w-10 h-10 object-contain" />
           <h1 className="text-xl font-bold text-slate-800">AI Calories Tracker</h1>
         </div>
         <div className="flex items-center gap-3">

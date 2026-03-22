@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSignIn } from '@clerk/clerk-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
-
+import logo from '../assets/images/logo.png'
 export default function SignInPage() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const [email, setEmail] = useState('');
@@ -50,7 +50,7 @@ export default function SignInPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="glass-panel w-full max-w-md rounded-2xl p-8 relative overflow-hidden transition-all duration-300">
         <div className="flex flex-col items-center justify-center mb-8">
-          <img src="/images/logo.png" alt="AI Calories Tracker Logo" className="w-16 h-16 mb-4 object-contain" />
+          <img src={logo} alt="AI Calories Tracker Logo" className="w-16 h-16 mb-4 object-contain" />
           <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-700">
             Welcome Back
           </h1>

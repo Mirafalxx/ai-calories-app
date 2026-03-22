@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import logo from '../assets/images/logo.png'
 
 export default function SignUpPage() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -73,11 +74,12 @@ export default function SignUpPage() {
     });
   };
 
+  
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="glass-panel w-full max-w-md rounded-2xl p-8 relative overflow-hidden transition-all duration-300">
         <div className="flex flex-col items-center justify-center mb-8">
-          <img src="/images/logo.png" alt="AI Calories Tracker Logo" className="w-16 h-16 mb-4 object-contain" />
+          <img src={logo} alt="AI Calories Tracker Logo" className="w-16 h-16 mb-4 object-contain" />
           <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-700">
             Create an Account
           </h1>
