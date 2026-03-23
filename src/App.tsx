@@ -8,6 +8,7 @@ import { useSyncUser } from "./hooks/useSyncUser";
 import logo from "./assets/images/logo.png";
 import { OnboardingForm } from "./components/Onboarding/OnboardingForm";
 import { FloatingSidebar } from "./components/Navigation/FloatingSidebar";
+import { HomePage } from "./pages/HomePage";
 
 function Dashboard() {
   const { user } = useUser();
@@ -29,6 +30,9 @@ function Dashboard() {
   return (
     <div className="min-h-screen bg-secondary-50 md:pl-28 pb-28 md:pb-0">
       <FloatingSidebar />
+      <div className="p-4 md:p-8 max-w-4xl mx-auto pt-8">
+        <HomePage />
+      </div>
     </div>
   );
 }

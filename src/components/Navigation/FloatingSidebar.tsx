@@ -1,11 +1,19 @@
 import { Home, BarChart2, User, Plus } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 export function FloatingSidebar() {
   return (
     <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 md:left-8 md:top-1/2 md:-translate-y-1/2 md:translate-x-0 md:bottom-auto flex md:flex-col items-center gap-2 md:gap-4 bg-white/80 backdrop-blur-xl border border-secondary-200 p-2 md:py-4 md:px-2 rounded-full shadow-2xl z-50">
-      <button className="p-3 rounded-full hover:bg-primary-50 text-secondary-500 hover:text-primary-600 transition-colors">
+      <NavLink 
+        to="/" 
+        className={({ isActive }) => `p-3 rounded-full transition-colors ${
+          isActive 
+            ? "bg-primary-50 text-primary-600" 
+            : "text-secondary-500 hover:bg-primary-50 hover:text-primary-600"
+        }`}
+      >
         <Home className="w-6 h-6" />
-      </button>
+      </NavLink>
       <button className="p-3 rounded-full hover:bg-primary-50 text-secondary-500 hover:text-primary-600 transition-colors">
         <BarChart2 className="w-6 h-6" />
       </button>
