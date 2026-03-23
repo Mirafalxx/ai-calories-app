@@ -14,7 +14,7 @@ function Dashboard() {
   if (!synced) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
-         <Loader2 className="w-8 h-8 animate-spin text-emerald-500 mb-4" />
+         <Loader2 className="w-8 h-8 animate-spin text-primary-500 mb-4" />
          <p className="text-slate-500 font-medium">Setting up your profile...</p>
       </div>
     );
@@ -36,9 +36,9 @@ function Dashboard() {
       </header>
 
       <main>
-        <div className="glass-panel p-6 rounded-2xl border border-emerald-100 bg-emerald-50/50">
-          <h2 className="text-2xl font-semibold text-emerald-800 mb-2">Welcome Back!</h2>
-          <p className="text-emerald-600/80">You have no tracked meals yet. Start tracking to achieve your 2000 cal daily goal.</p>
+        <div className="glass-panel p-6 rounded-2xl border border-primary-100 bg-primary-50/50">
+          <h2 className="text-2xl font-semibold text-primary-800 mb-2">Welcome Back!</h2>
+          <p className="text-primary-600/80">You have no tracked meals yet. Start tracking to achieve your 2000 cal daily goal.</p>
         </div>
       </main>
     </div>
@@ -64,7 +64,7 @@ function App() {
   if (!isLoaded && cachedEmail) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary-500" />
         <p className="text-slate-500 font-medium">Welcome back, {cachedEmail}...</p>
       </div>
     );

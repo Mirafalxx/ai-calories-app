@@ -59,7 +59,7 @@ export default function SignInPage() {
       <div className="glass-panel w-full max-w-md rounded-2xl p-8 relative overflow-hidden transition-all duration-300">
         <div className="flex flex-col items-center justify-center mb-8">
           <img src={logo} alt="AI Calories Tracker Logo" className="w-16 h-16 mb-4 object-contain" />
-          <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-emerald-700">
+          <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-primary-700">
             Welcome Back
           </h1>
           <p className="text-slate-500 text-sm mt-1">Sign in to track your calories</p>
@@ -80,7 +80,7 @@ export default function SignInPage() {
               id="email"
               type="email"
               required
-              className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
+              className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow"
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -96,7 +96,7 @@ export default function SignInPage() {
               id="password"
               type="password"
               required
-              className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
+              className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -107,7 +107,7 @@ export default function SignInPage() {
           <button
             type="submit"
             disabled={isLoading || !isLoaded}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 rounded-lg transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed border border-transparent"
+            className="w-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-2.5 rounded-lg transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed border border-transparent"
           >
             {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign In'}
           </button>
@@ -148,7 +148,7 @@ export default function SignInPage() {
 
         <p className="mt-8 text-center text-sm text-slate-500">
           Don't have an account?{' '}
-          <Link to="/sign-up" className="text-emerald-600 hover:text-emerald-700 font-medium transition-colors">
+          <Link to="/sign-up" className="text-primary-600 hover:text-primary-700 font-medium transition-colors">
             Sign up
           </Link>
         </p>
