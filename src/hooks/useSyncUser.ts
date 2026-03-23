@@ -6,6 +6,7 @@ import { db } from '../lib/firebase';
 export function useSyncUser() {
   const { user, isLoaded } = useUser();
   const [synced, setSynced] = useState(false);
+  const [isOnboarded, setIsOnboarded] = useState(false);
 
   useEffect(() => {
     async function syncUserToFirestore() {
@@ -13,6 +14,10 @@ export function useSyncUser() {
       if (!isLoaded || !user) return;
 
       try {
+        if (localStorage.getItem('isOnboarded') === 'true') {
+           setIsOnboarded(true);
+        }
+
         const userRef = doc(db, 'users', user.id);
         const userSnap = await getDoc(userRef);
 
@@ -26,10 +31,19 @@ export function useSyncUser() {
             name: user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'New User',
             createdAt: serverTimestamp(),
             dailyGoal: 2000,
+            isOnboarded: false,
           });
+          setIsOnboarded(false);
           console.log('Successfully saved user to Firestore!');
         } else {
           console.log('User already exists in Firestore.');
+          const data = userSnap.data();
+          if (data.isOnboarded || data.gender) {
+            setIsOnboarded(true);
+            localStorage.setItem('isOnboarded', 'true');
+          } else {
+            setIsOnboarded(false);
+          }
         }
       } catch (error) {
         console.error('🚨 Firebase Error: Failed to check or create user document.', error);
@@ -43,5 +57,5 @@ export function useSyncUser() {
     syncUserToFirestore();
   }, [user, isLoaded]);
 
-  return { synced, isLoaded };
+  return { synced, isLoaded, isOnboarded, setIsOnboarded };
 }

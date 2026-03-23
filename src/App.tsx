@@ -5,11 +5,12 @@ import { useEffect } from 'react';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import { useSyncUser } from './hooks/useSyncUser';
-import logo from './assets/images/logo.png'
+import logo from './assets/images/logo.png';
+import { OnboardingForm } from './components/Onboarding/OnboardingForm';
 
 function Dashboard() {
   const { user } = useUser();
-  const { synced } = useSyncUser();
+  const { synced, isOnboarded, setIsOnboarded } = useSyncUser();
 
   if (!synced) {
     return (
@@ -18,6 +19,10 @@ function Dashboard() {
          <p className="text-slate-500 font-medium">Setting up your profile...</p>
       </div>
     );
+  }
+
+  if (!isOnboarded) {
+    return <OnboardingForm onComplete={() => setIsOnboarded(true)} />;
   }
 
   return (
